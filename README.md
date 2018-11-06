@@ -1,3 +1,4 @@
+
 # 2.2-ros-tutorials: ROS Tutorials
 ## 1. Installing and Configuring Your ROS Environment
 ```
@@ -19,11 +20,11 @@ echo $ROS_PACKAGE_PATH
 ```
 ## 2. Navigating the ROS Filesystem
 
-### 2.1 Filesystem concepts
+### 2.1. Filesystem concepts
 - Packages: Packages are the software organization unit of ROS code. Each package can contain libraries, executables, scripts, or other artifacts.
 - Manifests (package.xml): A manifest is a description of a package. It serves to define dependencies between packages and to capture meta information about the package like version, maintainer, license, etc...
 
-### 2.2 Filesystem Tools
+### 2.2. Filesystem Tools
 ```
 ## **Using rospack**
 ## Allows you to get information about packages
@@ -44,7 +45,7 @@ rosls [locationname[/subdir]]
 
 ## 3. Creating a ROS Package
 
-### 3.1 What makes up a catkin Package?
+### 3.1. What makes up a catkin Package?
 For a package to be considered a catkin package it must meet a few requirements
 - The package must contain a [catkin compliant package.xml](http://wiki.ros.org/catkin/package.xml) file.
     - That package.xml file provides meta information about the package.
@@ -59,7 +60,7 @@ my_package/
   package.xml
 ```
 
-### 3.2 Packages in a catkin Workspace
+### 3.2. Packages in a catkin Workspace
 
 ```
 workspace_folder/        -- WORKSPACE
@@ -73,7 +74,7 @@ workspace_folder/        -- WORKSPACE
       CMakeLists.txt     -- CMakeLists.txt file for package_n
       package.xml        -- Package manifest for package_n
 ```
-### 3.3 Creating a catkin Package
+### 3.3. Creating a catkin Package
 ```
 ## How to create a new catkin package
 cd ~/catkin_ws/src
@@ -82,15 +83,15 @@ catkin_create_pkg <package_name> [depend1] [depend2] [depend3]
 ## This will create a beginner_tutorials folder which contains a package.xml and a CMakeLists.txt, which have been partially filled out
 catkin_create_pkg beginner_tutorials std_msgs rospy roscpp
 ```
-### 3.4 Building a catkin workspace and sourcing the setup file
+### 3.4. Building a catkin workspace and sourcing the setup file
 ```
 ## Now you need to build the packages in the catkin workspace
 cd ~/catkin_ws
 catkin_make
 . devel/setup.bash ## It's the same as (source devel/setup.bash)
 ```
-### 3.5 package dependencies
-#### 3.5.1 First-order dependencies
+### 3.5. package dependencies
+#### 3.5.1. First-order dependencies
 ```
 ## This order will show the first order's dependencies
 rospack depends1 <package_name>
@@ -110,15 +111,15 @@ cat package.xml
 ...
 </package>
 ```
-#### 3.5.2 Indirect dependencies
+#### 3.5.2. Indirect dependencies
 ```
 ## In many cases, a dependency will also have its own dependencies
 rospack depends1 rospy
 ## A package can have quite a few indirect dependencies
 rospack depends <package_name>
 ```
-### 3.6 Customizing the package.xml
-#### 3.6.1 Customizing the package.xml
+### 3.6. Customizing the package.xml
+#### 3.6.1. Customizing the package.xml
 ```
 ## **description tag**
 ## Change the description to anything you like
@@ -168,10 +169,10 @@ rospack depends <package_name>
 ```
 ## 4. Building a ROS Package
 
-### 4.1 Building Packages
+### 4.1. Building Packages
 Before continue with this section, be sure you have added the following line (source /opt/ros/kinetic/setup.bash) at the end of ~/.bashrc file
 
-#### 4.1.1 Using catkin_make
+#### 4.1.1. Using catkin_make
 You can imagine that catkin_make combines the calls to cmake and make in the standard CMake workflow.
 ```
 # In a catkin workspace
@@ -184,14 +185,14 @@ The above commands will build any catkin projects found in the src folder. If yo
 catkin_make --source my_src
 catkin_make install --source my_src  # (optionally)
 ```
-#### 4.1.2 Building Your Package
+#### 4.1.2. Building Your Package
 You should see that there is a folder called beginner_tutorials which you created with catkin_create_pkg in the previous tutorial. We can now build that package using catkin_make:
 ```
 catkin_make
 ```
 ## 5. Understanding ROS Nodes
 
-### 5.1 Quick Overview of Graph Concepts
+### 5.1. Quick Overview of Graph Concepts
 - Nodes: A node is an executable that uses ROS to communicate with other nodes.
 - Messages: ROS data type used when subscribing or publishing to a topic.
 - Topics: Nodes can publish messages to a topic as well as subscribe to a topic to receive messages.
@@ -199,19 +200,40 @@ catkin_make
 - rosout: ROS equivalent of stdout/stderr
 - roscore: Master + rosout + parameter server (parameter server will be introduced later) 
 
-### 5.2 Nodes
+### 5.2. Nodes
 A node really isn't much more than an executable file within a ROS package. ROS nodes use a ROS client library to communicate with other nodes. Nodes can publish or subscribe to a Topic. Nodes can also provide or use a Service.
 
-### 5.3 Client Libraries
+### 5.3. Client Libraries
 - rospy = python client library
 - roscpp = c++ client library
 
-### 5.4 roscore
+### 5.4. roscore
+roscore is the first thing you should run when using ROS
+```
+roscore
+```
+### 5.5. Using rosnode
+rosnode displays information about the ROS nodes that are currently running. The rosnode list command lists these active nodes:
+```
+rosnode list
+```
+The **rosnode info** command returns information about a specific node.
+```
+rosnode info <ros_node>
+rosnode cleanup # Unregister the nodes
+rosnode ping <ros_node>
+```
+
+### 5.6. Using rosrun
+rosrun allows you to use the package name to directly run a node within a package (without having to know the package path).
+```
+rosrun [package_name] [node_name]
+```
+## 6. Understanding ROS Topics
+
 
 
 ### QUESTIONS
 
 What does the "sources" command (source /opt/ros/melodic/setup.bash)?
 Can I use different workspaces?
-
-
