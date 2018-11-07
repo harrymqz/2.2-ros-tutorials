@@ -230,10 +230,92 @@ rosrun allows you to use the package name to directly run a node within a packag
 rosrun [package_name] [node_name]
 ```
 ## 6. Understanding ROS Topics
+### 6.1. Setup
+#### 6.1.1 roscore
+Open in a tab (be sure you're running just once)
+```
+roscore
+```
+#### 6.1.2. turtlesim
+Open in another tab
+```
+rosrun turtlesim turtlesim_node
+```
+#### 6.1.3. turtle keyboard teleoperation
+Open in a third tab, be sure you are able to see the turtle window and press the arrow keys in the this tab in order to move the turtle
+```
+rosrun turtlesim turtle_teleop_key
+```
+### 6.2. ROS Topics
+The turtlesim_node and the turtle_teleop_key node are communicating with each other over a ROS **Topic**. turtle_teleop_key is **publishing** the key strokes on a topic, while turtlesim **subscribes** to the same topic to receive the key strokes.
 
+#### 6.2.1. Using rqt_graph
+Install some applications to make the ros qt graph work
+```
+sudo apt install ros-melodic-rqt ros-melodic-rqt-common-plugins
+```
+In a new tab to see how is represented the topics and the nodes
+```
+rosrun rqt_graph rqt_graph
+```
+#### 6.2.2. Introducing rostopic
+The rostopic tool allows you to get information about ROS **topics**.
+```
+## Will show help about rostopic options
+rostopic -h
+```
+#### 6.2.3. Using rostopic echo
+rostopic echo shows the data published on a topic.
+```
+rostopic echo [topic]
+rostopic echo /turtle1/cmd_vel
+```
+#### 6.2.4. Using rostopic list
+**rostopic list** returns a list of all topics currently subscribed to and published.
+```
+rostopic list -h
+## In order to see a detailed list of the topics
+rostopic list -v
+```
+### 6.3. ROS Messages
+Communication on topics happens by sending ROS **messages** between nodes. For the publisher (turtle_teleop_key) and subscriber (turtlesim_node) to communicate, the publisher and subscriber must send and receive the same **type** of message. This means that a topic **type** is defined by the message **type** published on it. The **type** of the message sent on a topic can be determined using rostopic type.
 
+#### 6.3.1. Using rostopic type
+**rostopic type** returns the message type of any topic being published.
+```
+rostopic type [topic]
+## To test it
+rostopic type /turtle1/cmd_vel
+rosmsg show geometry_msgs/Twist
+```
+### 6.4. rostopic continued
+#### 6.4.1 Using rostopic pub
+```
+rostopic pub [topic] [msg_type] [args]
+rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist -- '[2.0, 0.0, 0.0]' '[0.0, 0.0, 1.8]'
+```
+Let's explain step by step:
+- **rostopic pub**: This command will publish messages to a given topic
+- **-1**: This option (dash-one) causes rostopic to only publish one message then exit
+- **/turtle1/cmd_vel**: This is the name of the topic to publish to
+- **geometry_msgs/Twist**: This is the message type to use when publishing to the topic
+- **-\-**: This option (double-dash) tells the option parser that none of the following arguments is an option. This is required in cases where your arguments have a leading dash -, like negative numbers
+- **'[2.0, 0.0, 0.0]' '[0.0, 0.0, 1.8]'**: As noted before, a geometry_msgs/Twist msg has two vectors of three floating point elements each: linear and angular. In this case, '[2.0, 0.0, 0.0]' becomes the linear value with x=2.0, y=0.0, and z=0.0, and '[0.0, 0.0, 1.8]' is the angular value with x=0.0, y=0.0, and z=1.8
 
+#### 6.4.2 Using rostopic hz
+**rostopic hz** reports the rate at which data is published
+```
+rostopic hz [topic]
+rostopic hz /turtle1/pose
+## This is a good way to pass the output of the first command to the second one
+rostopic type /turtle1/cmd_vel | rosmsg show
+```
+### 6.5. Using rqt_plot
+```
+rostopic type /turtle1/cmd_vel | rosmsg show
+```
 ### QUESTIONS
 
 What does the "sources" command (source /opt/ros/melodic/setup.bash)?
 Can I use different workspaces?
+
